@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "tcp_client.h": "c",
+        "tcp_server.h": "c",
+        "stdio.h": "c"
+    }
+}
