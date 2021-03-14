@@ -19,6 +19,9 @@ struct udp_client;
 typedef void(*client_handler)(struct udp_client*, char*);
 
 struct udp_client {
+	int blocking;
+	int flags;
+	unsigned long ms;
     struct sockaddr_in6 server_adress;
     int client_fd;
 	client_handler on_receive;
@@ -35,7 +38,9 @@ udp_client* udp_client_create(const char* url, int port) {
 
 	struct in6_addr serveraddr;
 	struct addrinfo hints, *res=NULL;
-	
+	c->blocking = 0;
+	c->flags = 0;
+	c->ms = 0;
 	memset(&hints, 0x00, sizeof(hints));
 	
 	hints.ai_flags    = AI_NUMERICSERV;
@@ -75,9 +80,7 @@ udp_client* udp_client_create(const char* url, int port) {
 
 	c->server_adress = *(struct sockaddr_in6*)res->ai_addr;
 
-	// int flags = fcntl(c->client_fd, F_GETFL, 0);
-	// fcntl(c->client_fd, F_SETFL , flags | O_NONBLOCK);
-
+	c->flags = fcntl(c->client_fd, F_SETFL, c->flags);
 	return c;
 }
 
@@ -87,4 +90,31 @@ void udp_client_destroy(udp_client* client) {
 
 void udp_client_disconnect(udp_client* client) {
 	close(client->client_fd);
+}
+
+void udp_client_set_timeout(struct udp_client* client, unsigned long ms) {
+	client->blocking = 1;
+	client->ms = ms;
+
+	int flags = fcntl(client->client_fd, F_GETFL, 0);
+	client->flags = flags;
+
+	int result = fcntl(client->client_fd, F_SETFL , flags | O_NONBLOCK);
+
+	if(result < 0) {
+		printf("Erro em udp_client_set_timeout\n");
+		exit(-1);
+	}
+}
+
+void udp_client_remove_timeout(struct udp_client* client) {
+	client->blocking = 0;
+
+	int result = fcntl(client->client_fd, F_SETFL, client->flags);
+	client->flags = result;
+
+	if(result < 0) {
+		printf("Erro em udp_client_remove_timeout\n");
+		exit(-1);
+	}
 }

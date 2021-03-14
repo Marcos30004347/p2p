@@ -2,6 +2,14 @@
     "files.associations": {
         "tcp_client.h": "c",
         "tcp_server.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "udp_server.h": "c",
+        "buffer.h": "c",
+        "udp_client.h": "c",
+        "algorithm": "c",
+        "stdlib.h": "c",
+        "random": "c",
+        "chunks.h": "c",
+        "async.h": "c"
     }
 }

@@ -3,5 +3,7 @@
 
 char* itoa(int value, char* result, int base);
 
+char* uip_to_sip(unsigned ip);
+unsigned sip_to_uip(const char* ip);
 
 #endif

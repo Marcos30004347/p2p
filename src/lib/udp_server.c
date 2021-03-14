@@ -107,8 +107,8 @@ connection udp_server_accept_connection(udp_server* server) {
     return conn;
 }
 
-long udp_server_receice(udp_server* server, char* buffer)  {
-    long resp = recvfrom(server->server_fd, buffer, 1008, MSG_WAITALL, NULL, NULL); 
+long udp_server_receice(udp_server* server, char* buffer, unsigned long size)  {
+    long resp = recvfrom(server->server_fd, buffer, size, MSG_WAITALL, NULL, NULL); 
     return 1;
 }
 

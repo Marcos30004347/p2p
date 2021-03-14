@@ -8,20 +8,18 @@
 
 typedef void*(*thread_handler)(void*);
 
-struct thread
-{
+typedef struct thread {
     pthread_t object;
     thread_handler handler;
     void* arg;
-};
+} thread;
 
-struct mutex
-{
+typedef struct mutex {
     pthread_mutex_t object;
-};
+} mutex;
 
-struct thread* thread_create(thread_handler handler, void* arg) {
-    thread *t = (struct thread*)malloc(sizeof(struct thread));
+thread* thread_create(thread_handler handler, void* arg) {
+    thread *t = (thread*)malloc(sizeof(thread));
 
 
     t->handler = handler;
@@ -31,30 +29,29 @@ struct thread* thread_create(thread_handler handler, void* arg) {
     return t;
 }
 
-void thread_destroy(struct thread* thread)
+void thread_destroy(thread* t)
 {
-    free(thread);
+    free(t);
 }
 
-void thread_join(struct thread* thread) {
-    pthread_join(thread->object, NULL);
+void thread_join(struct thread* t) {
+    pthread_join(t->object, NULL);
 }
 
-
-struct mutex* mutex_create() {
+mutex* mutex_create() {
     mutex* m = (mutex*)malloc(sizeof(mutex));
     pthread_mutex_init(&(m->object), NULL);
     return m;
 }
 
-void mutex_lock(mutex* mutex) {
-    pthread_mutex_lock(&mutex->object);
+void mutex_lock(mutex* m) {
+    pthread_mutex_lock(&m->object);
 }
 
-void mutex_unlock(mutex* mutex) {
-    pthread_mutex_unlock(&mutex->object);
+void mutex_unlock(mutex* m) {
+    pthread_mutex_unlock(&m->object);
 }
 
-void mutex_destroy(mutex* mutex) {
-    free(mutex);
+void mutex_destroy(mutex* m) {
+    free(m);
 }

@@ -1,9 +1,11 @@
-all: peer client
+all: cpeer cclient
 
-peer:
+cpeer:
 	gcc \
 	-I ./src \
+	src/lib/chunks.c \
 	src/lib/async.c \
+	src/lib/buffer.c \
 	src/lib/tcp_server.c \
 	src/lib/tcp_client.c \
 	src/lib/udp_server.c \
@@ -12,10 +14,12 @@ peer:
 	src/peer/main.c \
 	-o peer -lpthread -lm
 
-client:
+cclient:
 	gcc \
 	-I ./src \
+	src/lib/chunks.c \
 	src/lib/async.c \
+	src/lib/buffer.c \
 	src/lib/tcp_server.c \
 	src/lib/tcp_client.c \
 	src/lib/udp_server.c \
