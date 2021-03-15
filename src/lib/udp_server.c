@@ -5,6 +5,8 @@
 #include <netinet/in.h> 
 #include <sys/socket.h> 
 #include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 #include <stdlib.h>
 #include <stdio.h> 
@@ -107,9 +109,23 @@ connection udp_server_accept_connection(udp_server* server) {
     return conn;
 }
 
-long udp_server_receice(udp_server* server, char* buffer, unsigned long size)  {
-    long resp = recvfrom(server->server_fd, buffer, size, MSG_WAITALL, NULL, NULL); 
-    return 1;
+udp_address udp_server_receive(udp_server* server, char* buffer, unsigned long size)  {
+    socklen_t len;
+    struct sockaddr addr;
+    
+    long resp = recvfrom(server->server_fd, buffer, size, MSG_WAITALL, &addr, &len);
+    
+    udp_address address;
+    
+    char* ips = inet_ntoa(((struct sockaddr_in*)&addr)->sin_addr);
+
+    char* ipc = malloc(sizeof(char)* strlen(ips));
+    strcpy(ipc, ips);
+
+    address.port = ((struct sockaddr_in*)&addr)->sin_port;
+    address.ip = ipc;
+
+    return address;
 }
 
 

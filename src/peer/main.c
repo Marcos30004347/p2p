@@ -57,11 +57,12 @@ int main(int argc, char *argv[]) {
 
         ptr = strtok(NULL, ": ");
     }
+
     udp_server* server = udp_server_create(atoi(argv[1]));
 
     while(1) {
         buffer* req = buffer_create(2);
-        udp_server_receice(server, req->buffer, 2);
+        char* ip = udp_server_receive(server, req->buffer, 2);
         short type = *(short*)buffer_get(req, 0);
 
         if(type == 1) hello_req(server);
@@ -80,7 +81,7 @@ int main(int argc, char *argv[]) {
 void hello_req(udp_server* server) {
     // Get chunk count
     buffer* chunk_count_req = buffer_create(2);
-    udp_server_receice(server, chunk_count_req->buffer, 2);
+    udp_server_receive(server, chunk_count_req->buffer, 2);
 
     short chunks_c = *(short*)buffer_get(chunk_count_req, 0);
 
@@ -88,7 +89,7 @@ void hello_req(udp_server* server) {
     short chunks[chunks_c];
 
     for(int i=0;i<chunks_c; i++) {
-        udp_server_receice(server, &chunks[i], 2);
+        udp_server_receive(server, &chunks[i], 2);
     }
 
     buffer_destroy(chunk_count_req);
@@ -96,21 +97,31 @@ void hello_req(udp_server* server) {
 
 void query_req(udp_server* server) {
     buffer* chunk_count_req = buffer_create(10);
+
+    // Get Protocol data
     unsigned ip     = *(unsigned*)buffer_get(chunk_count_req, 0);
     short port      = *(short*)buffer_get(chunk_count_req, 4);
-    short peer      = *(short*)buffer_get(chunk_count_req, 6);
+    short peer_ttl  = *(short*)buffer_get(chunk_count_req, 6);
     short chunks_c  = *(short*)buffer_get(chunk_count_req, 8);
 
     short chunks[chunks_c];
     for(int i=0;i<chunks_c; i++) {
-        udp_server_receice(server, &chunks[i], 2);
+        udp_server_receive(server, &chunks[i], 2);
     }
 
+    char* ip_str = uip_to_sip(ip);
 
-    unsigned ip = sip_to_uip("127.123.13.23");
-    char* t = uip_to_sip(ip);
+    // Log
+    printf("QUERY: %s:%i\n", ip_str, port);
+    printf("PEER-TTL: %i\n", peer_ttl);
+    printf("CHUNKS: ");
+    for(int i=0;i<chunks_c; i++) {
+        udp_server_receive(server, &chunks[i], 2);
+        printf(" %s", chunks[i]);
+    }
+    printf("\n");
+
+
 
     buffer_destroy(chunk_count_req);
-
-
 }
