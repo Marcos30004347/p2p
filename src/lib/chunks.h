@@ -13,6 +13,7 @@ typedef struct chunks {
 
 chunks* chunks_create(short id, const char* path);
 void chunks_remove(chunks* c);
+
 chunks* chunks_add(chunks *h, chunks* c);
 void chunks_destroy(chunks *h);
 

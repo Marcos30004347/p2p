@@ -4,10 +4,9 @@ cpeer:
 	gcc \
 	-I ./src \
 	src/lib/chunks.c \
+	src/lib/protocol.c \
 	src/lib/async.c \
 	src/lib/buffer.c \
-	src/lib/tcp_server.c \
-	src/lib/tcp_client.c \
 	src/lib/udp_server.c \
 	src/lib/udp_client.c \
 	src/lib/utils.c \
@@ -18,10 +17,9 @@ cclient:
 	gcc \
 	-I ./src \
 	src/lib/chunks.c \
+	src/lib/protocol.c \
 	src/lib/async.c \
 	src/lib/buffer.c \
-	src/lib/tcp_server.c \
-	src/lib/tcp_client.c \
 	src/lib/udp_server.c \
 	src/lib/udp_client.c \
 	src/lib/utils.c \

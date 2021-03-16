@@ -119,19 +119,22 @@ udp_address udp_server_receive(udp_server* server, char* buffer, unsigned long s
     
     char* ips = inet_ntoa(((struct sockaddr_in*)&addr)->sin_addr);
 
-    char* ipc = malloc(sizeof(char)* strlen(ips));
-    strcpy(ipc, ips);
+    // char* ipc = malloc(sizeof(char)* strlen(ips));
 
     address.port = ((struct sockaddr_in*)&addr)->sin_port;
-    address.ip = ipc;
+    strcpy(address.ip, ips);
 
     return address;
 }
 
 
-void udp_send_messageo_client(int client, const char* message) {
-    struct sockaddr_in servaddr, cliaddr; 
-    int len;
-    sendto(client, message, strlen(message), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
+long udp_server_send_message_to(udp_server* server, char* url, int port, const char* message, unsigned long len) {
+    struct sockaddr_in dest;
+    dest.sin_family = AF_INET;
+
+    inet_aton(url, &dest.sin_addr);
+    dest.sin_port = htons(port);
+
+    return sendto(server->server_fd, message, len, MSG_CONFIRM, (const struct sockaddr *) &dest, sizeof(dest)); 
 }
 

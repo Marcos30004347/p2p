@@ -11,6 +11,20 @@
         "random": "c",
         "chunks.h": "c",
         "async.h": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "utils.h": "c",
+        "protocol.h": "c",
+        "array": "c",
+        "functional": "c",
+        "istream": "c",
+        "ostream": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "client_protocol.h": "c",
+        "*.tcc": "cpp",
+        "fstream": "cpp",
+        "queue.h": "c",
+        "client.h": "c"
     }
 }
